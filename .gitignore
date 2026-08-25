@@ -1,0 +1,18 @@
+# ambiente virtual
+venv/
+
+# Cache do Python
+__pycache__/
+.pytest_cache/
+*.py[cod]
+
+# Variaveis de ambiente e segredos
+.env
+.env.*
+
+# Logs
+*.log
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.dbO
