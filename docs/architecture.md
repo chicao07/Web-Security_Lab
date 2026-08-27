@@ -1,5 +1,18 @@
 # Arquitetura do Laboratorio
 
+## Índice
+
+- [Visao geral](#Visao-geral)
+- [Componentes](#Componentes)
+  - [Aplicacao Flask](#Aplicacao-Flask)
+  - [Cliente HTTP](#Cliente-HTTP)
+  - [Burp Suite](#Burp-Suite)
+  - [Testes automatizados](#Testes-automatizados)
+- [Fluxo de comunicacao](#Fluxo-de-comunicacao)
+- [Controle de sessao](#Controle-de-sessao)
+- [Controle de acesso](#Controle-de-acesso)
+- [Ambiente](#Ambiente)
+ 
 ## Visao geral
 
 O Web Security Lab e uma aplicacao web local desenvolvida em Flask para estudo pratico de autenticacao, sessoes, controle de acesso, APIs REST e vulnerabilidades relacionadas a autorizacao.

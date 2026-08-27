@@ -1,14 +1,42 @@
-# Vulnerabilidades e Controle de Seguranca
+# Vulnerabilidades e Controle de Segurança
 
+## Índice
+
+- [1. IDOR / BOLA](#1-IDOR-/-BOLA)
+  - [1.1 Descrição](#11-Descricao)
+  - [1.2 Cenário vulnerável](#12-Cenario-vulneravel)
+  - [1.3 Causa](#13-Causa)
+  - [1.4 Impacto](#14-Impacto)
+  - [1.5 Correção](#15-Correcao)
+- [2. BOLA em API](#2-BOLA-em-API)
+  - [2.1 Descrição](#21-Descricao)
+  - [2.2 Cenário vulnerável](#22-Cenario-vulneravel)
+  - [2.3 Causa](#23-Causa)
+  - [2.4 Correção](#24-Correcao)
+- [3. RBAC](#3-RBAC)
+  - [3.1 Descrição](#31-Descricao)
+  - [3.2 Regra](#32-Regra)
+  - [3.3 Resultado esperado](#33-Resultado-esperado)
+  - [3.4 Correção](#34-Correcao)
+- [4. Escalada vertical de privilégios](#4-Escalada-vertical-de-privilégios)
+  - [4.1 Descrição](#41-Descricao)
+  - [4.2 Cenário](#42-Cenário)
+- [5. Autorização baseada em dado controlado pelo cliente](#5-Autorização-baseada-em-dado-controlado-pelo-cliente)
+  - [5.1 Descrição](#51-Descricao)
+  - [5.2 Cenário](#52-Cenário)
+  - [5.3 Causa](#53-Causa)
+  - [5.4 Cenário](#54-Correção-conceitual)
+ 
+    
 ## 1. IDOR / BOLA
 
-### Descricao
+### 1.1 Descrição
 
 Foi criada uma rota de perfil na qual o identificador do recurso era fornecido pelo cliente.
 
-### Cenario vulneravel
+### 1.2 Cenário vulnerável
 
-Um usuario autenticado como Joao conseguiu solicitar: 
+Um usuário autenticado como Joao conseguiu solicitar: 
 
 ```http
 GET /perfil/1002
@@ -16,32 +44,32 @@ GET /perfil/1002
 
 e recebeu o perfil pertencente a Maria.
 
-### Causa
+### 1.3 Causa
 
-A implementacao inicial verificava apenas se o identificador existia e nao validava a relacao entre o usuario autenticado e o objeto solicitado. 
+A implementação inicial verificava apenas se o identificador existia e não validava a relação entre o usuário autenticado e o objeto solicitado. 
 
-### Impacto
+### 1.4 Impacto
 
-Um usuario autenticado poderia acessar objetos pertencentes a outros usuarios.
+Um usuário autenticado poderia acessar objetos pertencentes a outros usuários.
 
-### Correcao
+### 1.5 Correção
 
-A aplicacao passou a obter o usuario autenticado atraves da sessao e comparar sua identidade com o proprietario do recurso.
+A aplicação passou a obter o usuário autenticado através da sessão e comparar sua identidade com o proprietário do recurso.
 
-Resultado esperado apos a correcao:
+Resultado esperado após a correção:
 
 ```text
-Joao -> proprio perfil -> 200 OK
+Joao -> próprio perfil -> 200 OK
 Joao -> perfil de Maria -> 403 Forbidden
 ```
 
 ## 2. BOLA em API
 
-### Descricao 
+### 2.1 Descrição 
 
 O mesmo conceito de controle de acesso foi reproduzido em uma API REST
 
-### Cenario vulneravel
+### 2.2 Cenário vulnerável
 
 Foi utilizado o endpoint:
 
@@ -49,32 +77,32 @@ Foi utilizado o endpoint:
 GET /api/orders/<id>
 ```
 
-A implementacao vulneravel retornava o objeto apenas verificando sua existencia.
+A implementação vulnerável retornava o objeto apenas verificando sua existência.
 
-### Causa
+### 2.3 Causa
 
-A API nao verificava se o pedido solicitado pertencia ao usuario autenticado.
+A API não verificava se o pedido solicitado pertencia ao usuário autenticado.
 
-### Correcao
+### 2.4 Correção
 
-A implementacao corrigida compara o usuario armazenado na sessao com o campo cliente do pedido.
+A implementação corrigida compara o usuário armazenado na sessão com o campo cliente do pedido.
 
 ## 3. RBAC
 
-### Descricao
+### 3.1 Descrição
 
-Foi implementado controle de acesso baseado em funcoes
+Foi implementado controle de acesso baseado em funções
 
-As funcoes utilizadas no laboratorio sao:
+As funções utilizadas no laboratório são:
 
 ```text
 user
 admin
 ```
 
-### Regra
+### 3.2 Regra
 
-Usuarios comuns nao podem acessar: 
+Usuários comuns não podem acessar: 
 
 ```http
 GET /api/admin/users
@@ -82,21 +110,21 @@ GET /api/admin/users
 
 Enquanto administradores podem.
 
-### Resultado esperado
+### 3.3 Resultado esperado
 
 ```text
-Nao autenticado -> 401
+Não autenticado -> 401
 user            -> 403
 admin           -> 200
 ```
 
-## 4. Escalada vertical de privilegios 
+## 4. Escalada vertical de privilégios 
 
-### Descricao
+### 4.1 Descrição
 
-Foi criado um cenario para testar se um usuario de baixo privilegio consegue acessar funcionalidades administrativas
+Foi criado um cenário para testar se um usuário de baixo privilegio consegue acessar funcionalidades administrativas
 
-### Cenario
+### 4.2 Cenário
 
 ```text
 Joao (user)
@@ -120,13 +148,13 @@ Admin
 200 OK
 ```
 
-## 5. Autorizacao baseada em dado controlado pelo cliente
+## 5. Autorização baseada em dado controlado pelo cliente
 
-### Descricao 
+### 5.1 Descrição 
 
-Foi criada uma implementacao deliberadamente vulneravel que utiliza o valor de role recebido atraves de um cookie para tomar decisoes de autorizacao.
+Foi criada uma implementação deliberadamente vulnerável que utiliza o valor de role recebido através de um cookie para tomar decisões de autorização.
 
-### Cenario
+### 5.2 Cenário
 
 ```text
 role=user
@@ -134,7 +162,7 @@ role=user
    403
 ```
 
-Apos a alteracao do valor controlado pelo cliente:
+Após a alteração do valor controlado pelo cliente:
 
 ```text
 role=admin
@@ -142,10 +170,10 @@ role=admin
    200
 ```
 
-### Causa
+### 5.3 Causa
 
-A aplicacao confiava diretamente em um valor fornecido pelo cliente para determinar privilegios
+A aplicação confiava diretamente em um valor fornecido pelo cliente para determinar privilégios
 
-### Correcao conceitual
+### 5.4 Correção conceitual
 
-A autorizacao deve ser baseada em uma identidade e privilegios determinados ou validados pelo servidor, e nao simplesmente em uma declaracao enviada pelo cliente.
+A autorização deve ser baseada em uma identidade e privilégios determinados ou validados pelo servidor, e não simplesmente em uma declaração enviada pelo cliente.
